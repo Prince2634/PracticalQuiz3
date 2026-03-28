@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar System</title>
+  <script src="script/aframe.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; font-family: 'Courier New', monospace; }
+
+    #ui-overlay {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    #ui-overlay h1 {
+      color: #fff;
+      font-size: 1.8rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(255,200,50,0.8), 0 0 40px rgba(255,150,0,0.4);
+      font-weight: 300;
+    }
+
+    #ui-overlay p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      margin-top: 4px;
+    }
+
+    #planet-labels {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .planet-tag {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+
+<div id="ui-overlay">
+  <h1>&#9728; Solar System</h1>
+  <p>Drag to rotate &nbsp;|&nbsp; Scroll to zoom</p>
+</div>
+
+<div id="planet-labels">
+  <span class="planet-tag">Mercury</span>
+  <span class="planet-tag">Venus</span>
+  <span class="planet-tag">Earth + Moon</span>
+  <span class="planet-tag">Mars</span>
+  <span class="planet-tag">Jupiter</span>
+  <span class="planet-tag">Saturn &#9684;</span>
+  <span class="planet-tag">Uranus</span>
+  <span class="planet-tag">Neptune</span>
+</div>
+
+<a-scene
+  background="color: #000005"
+  renderer="antialias: true; colorManagement: true;"
+>
+
+  <!-- Camera -->
+  <a-entity
+    id="camera-rig"
+    position="0 30 80"
+    rotation="-20 0 0"
+  >
+    <a-camera
+      look-controls="reverseMouseDrag: false"
+      wasd-controls="enabled: false"
+      fov="60"
+    ></a-camera>
+  </a-entity>
+
+  <!-- Starfield background sphere -->
+  <a-sphere
+    src="texture/2k_stars_milky_way.jpg"
+    radius="800"
+    side="back"
+    shader="flat"
+  ></a-sphere>
+
+  <!-- Lighting -->
+  <a-light type="ambient" color="#111" intensity="0.3"></a-light>
+  <a-light type="point" color="#fff8e7" intensity="2.5" position="0 0 0" distance="600" decay="1"></a-light>
+
+  <!-- ===== SUN ===== -->
+  <a-sphere
+    id="sun"
+    src="texture/2k_sun.jpg"
+    radius="6"
+    position="0 0 0"
+    shader="flat"
+    animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
+  >
+    <a-sphere radius="6.5" color="#ff8800" opacity="0.15" shader="flat"></a-sphere>
+    <a-sphere radius="7.2" color="#ff6600" opacity="0.08" shader="flat"></a-sphere>
+  </a-sphere>
+
+  <!-- Mercury  orbit radius 10, period 8s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 8000; easing: linear; loop: true"
+  >
+    <a-torus radius="10" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_mercury.jpg"
+      radius="0.5"
+      position="10 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 5000; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+  <!-- Venus  orbit radius 14, period 20s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 20000; easing: linear; loop: true"
+  >
+    <a-torus radius="14" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_venus_atmosphere.jpg"
+      radius="0.95"
+      position="14 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 24000; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+  <!-- Earth + Moon  orbit radius 19, period 32s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 32000; easing: linear; loop: true"
+  >
+    <a-torus radius="19" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-entity position="19 0 0">
+      <a-sphere
+        src="texture/2k_earth_daymap.jpg"
+        radius="1"
+        animation="property: rotation; to: 0 360 0; dur: 10000; easing: linear; loop: true"
+      ></a-sphere>
+      <!-- Moon -->
+      <a-entity
+        animation="property: rotation; to: 0 360 0; dur: 4000; easing: linear; loop: true"
+      >
+        <a-sphere
+          src="texture/2k_moon.jpg"
+          radius="0.27"
+          position="1.9 0 0"
+        ></a-sphere>
+      </a-entity>
+    </a-entity>
+  </a-entity>
+
+  <!-- Mars  orbit radius 25, period 52s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 52000; easing: linear; loop: true"
+  >
+    <a-torus radius="25" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_mars.jpg"
+      radius="0.6"
+      position="25 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 9500; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+  <!-- Jupiter  orbit radius 34, period 120s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 120000; easing: linear; loop: true"
+  >
+    <a-torus radius="34" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_jupiter.jpg"
+      radius="3.2"
+      position="34 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 4200; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+  <!-- Saturn  orbit radius 45, period 290s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 290000; easing: linear; loop: true"
+  >
+    <a-torus radius="45" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-entity position="45 0 0">
+      <a-sphere
+        src="texture/2k_saturn.jpg"
+        radius="2.6"
+        animation="property: rotation; to: 0 360 0; dur: 4500; easing: linear; loop: true"
+      ></a-sphere>
+      <!-- Saturn rings as a flat disc -->
+      <a-cylinder
+        src="texture/2k_saturn_ring_alpha.png"
+        radius="5"
+        height="0.05"
+        opacity="0.8"
+        shader="flat"
+        rotation="0 0 0"
+        color="#c9a86c"
+        open-ended="true"
+      ></a-cylinder>
+    </a-entity>
+  </a-entity>
+
+  <!-- Uranus  orbit radius 55, period 490s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 490000; easing: linear; loop: true"
+  >
+    <a-torus radius="55" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_uranus.jpg"
+      radius="1.9"
+      position="55 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 6200; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+  <!-- Neptune  orbit radius 64, period 800s -->
+  <a-entity
+    animation="property: rotation; to: 0 360 0; dur: 800000; easing: linear; loop: true"
+  >
+    <a-torus radius="64" radius-tubular="0.03" color="#ffffff" opacity="0.12" rotation="90 0 0" shader="flat"></a-torus>
+    <a-sphere
+      src="texture/2k_neptune.jpg"
+      radius="1.7"
+      position="64 0 0"
+      animation="property: rotation; to: 0 360 0; dur: 5500; easing: linear; loop: true"
+    ></a-sphere>
+  </a-entity>
+
+</a-scene>
+
+<script>
+  // Mouse wheel zoom
+  const rig = document.getElementById('camera-rig');
+  let zoomDist = 80;
+  window.addEventListener('wheel', (e) => {
+    zoomDist += e.deltaY * 0.08;
+    zoomDist = Math.max(20, Math.min(200, zoomDist));
+    const pos = rig.getAttribute('position');
+    rig.setAttribute('position', { x: pos.x, y: pos.y, z: zoomDist });
+  });
+</script>
+
+</body>
+</html>
